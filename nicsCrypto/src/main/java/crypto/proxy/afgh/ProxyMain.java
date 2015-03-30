@@ -6,8 +6,8 @@ package crypto.proxy.afgh;
 
 import crypto.Tuple;
 import it.unisa.dia.gas.jpbc.*;
+
 /**
- *
  * @author david
  */
 public class ProxyMain {
@@ -15,11 +15,11 @@ public class ProxyMain {
     static long cpuTime;
     static long time[] = new long[20];
     static int i = 0;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-
 
 
         //java.security.
@@ -160,7 +160,7 @@ public class ProxyMain {
 
         medirTiempoMicroSegundos();
 
-        ElementPowPreProcessing pk_a_ppp = pk_a.pow();
+        ElementPowPreProcessing pk_a_ppp = pk_a.getElementPowPreProcessing();
 
         medirTiempoMicroSegundos();
 
@@ -179,7 +179,7 @@ public class ProxyMain {
 
         medirTiempoMicroSegundos();
 
-        PairingPreProcessing e_ppp = global.getE().pairing(rk_a_b);
+        PairingPreProcessing e_ppp = global.getE().getPairingPreProcessingFromElement(rk_a_b);
 
         medirTiempoMicroSegundos();
 
@@ -193,7 +193,7 @@ public class ProxyMain {
 
         assert message.equals(new String(m2.toBytes()).trim());
 
-        for(int j = 0; j < i; j++){
+        for (int j = 0; j < i; j++) {
             System.out.println(time[j]);
         }
 
@@ -211,9 +211,8 @@ public class ProxyMain {
     }
 
 
-
     public static long medirTiempoMicroSegundos() {
-        time[i] = (System.nanoTime() - cpuTime)/1000;
+        time[i] = (System.nanoTime() - cpuTime) / 1000;
         i++;
         cpuTime = System.nanoTime();
         return time[i];

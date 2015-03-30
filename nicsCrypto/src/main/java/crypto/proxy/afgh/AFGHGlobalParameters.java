@@ -4,27 +4,22 @@
  */
 package crypto.proxy.afgh;
 
-import it.unisa.dia.gas.jpbc.CurveGenerator;
-import it.unisa.dia.gas.jpbc.CurveParameters;
-import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
-import it.unisa.dia.gas.jpbc.Field;
-import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.jpbc.*;
 import it.unisa.dia.gas.plaf.jpbc.field.curve.CurveField;
-import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeAPairing;
+import it.unisa.dia.gas.plaf.jpbc.pairing.parameters.PropertiesParameters;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author david
  */
 public class AFGHGlobalParameters {
@@ -35,57 +30,59 @@ public class AFGHGlobalParameters {
     private Element g, Z;
     private ElementPowPreProcessing g_ppp, Z_ppp;
 
-    private CurveParameters curveParams;
-    private Random random;
+    private PairingParameters curveParams;
+    private SecureRandom random;
 
-    public AFGHGlobalParameters(DefaultCurveParameters curveParameters){
+    public AFGHGlobalParameters(PairingParameters curveParameters) {
         initialize(curveParameters);
     }
 
     public AFGHGlobalParameters(int r, int q) {
         rBits = r;
         qBits = q;
-        
 
-        random = new Random(0);
+
+        random = new SecureRandom();
+        random.setSeed(0);
         boolean generateCurveFieldGen = false;
-        
+
         // Init the generator...
-        CurveGenerator curveGenerator = new TypeACurveGenerator(random, rBits, qBits, generateCurveFieldGen);
+        PairingParametersGenerator curveGenerator = new TypeACurveGenerator(random, rBits, qBits, generateCurveFieldGen);
 
         // Generate the parameters...
         curveParams = curveGenerator.generate();
         initialize(curveParams);
     }
 
-    public AFGHGlobalParameters(InputStream is){
-        curveParams = new DefaultCurveParameters();
-        ((DefaultCurveParameters) curveParams).load(is);
+    public AFGHGlobalParameters(InputStream is) {
+        curveParams = new PropertiesParameters();
+        ((PropertiesParameters) curveParams).load(is);
         initialize(curveParams);
     }
 
-    public AFGHGlobalParameters(File f) throws FileNotFoundException{
+    public AFGHGlobalParameters(File f) throws FileNotFoundException {
         this(new FileInputStream(f));
     }
 
-    public AFGHGlobalParameters(byte[] b){
+    public AFGHGlobalParameters(byte[] b) {
         this(new String(b));
     }
 
-    public AFGHGlobalParameters(String cp){
+    public AFGHGlobalParameters(String cp) {
         try {
-            curveParams = new DefaultCurveParameters();
-            
+            curveParams = new PropertiesParameters();
+
             ByteArrayInputStream is = new ByteArrayInputStream(cp.getBytes());
-            ((DefaultCurveParameters) curveParams).load(is);
+            ((PropertiesParameters) curveParams).load(is);
             initialize(curveParams);
         } catch (Exception ex) {
             Logger.getLogger(AFGHGlobalParameters.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void initialize(CurveParameters cp){
-        random = new Random(0);
+    private void initialize(PairingParameters cp) {
+        random = new SecureRandom();
+        random.setSeed(0);
         //e = PairingFactory.getPairing(cp);
 
         e = new TypeAPairing(random, cp);
@@ -94,11 +91,9 @@ public class AFGHGlobalParameters {
         G1 = e.getG1();
         G2 = e.getGT();
 
-        
 
         // Field Zq
         Zq = e.getZr();
-        
 
 
         // Global system parameters: g \in G1, Z = e(g,g) \in G2
@@ -113,8 +108,8 @@ public class AFGHGlobalParameters {
 
         Z = e.pairing(g, g).getImmutable();
 
-        Z_ppp = Z.pow();
-        g_ppp = g.pow();
+        Z_ppp = Z.getElementPowPreProcessing();
+        g_ppp = g.getElementPowPreProcessing();
 
         
 
@@ -126,7 +121,7 @@ public class AFGHGlobalParameters {
         System.out.println(g.getClass());
         System.out.println(g.toBytes()[0]);
         System.out.println(Z.getClass());*/
-        
+
     }
 
     public Field getG1() {
@@ -197,5 +192,4 @@ public class AFGHGlobalParameters {
     }
 
 
-    
 }

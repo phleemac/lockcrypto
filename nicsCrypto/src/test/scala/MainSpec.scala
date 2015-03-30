@@ -59,7 +59,7 @@ class MainSpec extends Specification {
 
       medirTiempoMicroSegundos
 
-      val pk_a_ppp: ElementPowPreProcessing = pk_a.pow
+      val pk_a_ppp: ElementPowPreProcessing = pk_a.getElementPowPreProcessing
 
       medirTiempoMicroSegundos
 
@@ -77,7 +77,7 @@ class MainSpec extends Specification {
 
       medirTiempoMicroSegundos
 
-      val e_ppp: PairingPreProcessing = global.getE.pairing(rk_a_b)
+      val e_ppp: PairingPreProcessing = global.getE.getPairingPreProcessingFromElement(rk_a_b)
 
       medirTiempoMicroSegundos
 

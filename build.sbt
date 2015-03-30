@@ -1,12 +1,29 @@
-name := """lockcrypto"""
+lazy val projectPrefix = """lockcrypto-"""
+lazy val commonSettings = Seq(
+  version := "0.01-SNAPSHOT",
+  scalaVersion := "2.11.6"
+)
 
-version := "0.01"
+lazy val root = (project in file(".")).
+  aggregate(core, web)
 
-scalaVersion := "2.11.5"
+lazy val core = project.
+  settings(commonSettings: _*).
+  settings(
+    name := projectPrefix + """core"""
+  )
 
-// Change this to another test framework if you prefer
-//libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
-
-// Uncomment to use Akka
-//libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.9"
+lazy val web = project.
+  dependsOn(core).
+  enablePlugins(PlayScala).
+  settings(commonSettings: _*).
+  settings(
+    name := projectPrefix + """web""",
+    libraryDependencies ++= Seq(
+      jdbc,
+      anorm,
+      cache,
+      ws
+    )
+  )
 

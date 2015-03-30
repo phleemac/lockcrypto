@@ -5,163 +5,167 @@ import it.unisa.dia.gas.jpbc.Element;
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class ImmutableQuadraticElement<E extends Element> extends QuadraticElement<E> {
 
     public ImmutableQuadraticElement(QuadraticElement<E> element) {
         super(element.getField());
 
-        this.x = (E) x.getImmutable();
-        this.y = (E) y.getImmutable();
+        this.x = (E) element.getX().getImmutable();
+        this.y = (E) element.getY().getImmutable();
 
         this.immutable = true;
     }
 
-
     @Override
-    public QuadraticElement set(Element e) {
-        return duplicate().set(e);    
-    }
-
-    @Override
-    public QuadraticElement set(int value) {
-        return duplicate().set(value);    
-    }
-
-    @Override
-    public QuadraticElement set(BigInteger value) {
-        return duplicate().set(value);    
-    }
-
-    @Override
-    public QuadraticElement setToZero() {
-        return duplicate().setToZero();    
-    }
-
-    @Override
-    public QuadraticElement setToOne() {
-        return duplicate().setToOne();    
-    }
-
-    @Override
-    public QuadraticElement setToRandom() {
-        return duplicate().setToRandom();    
-    }
-
-    @Override
-    public int setFromBytes(byte[] source, int offset) {
-        return duplicate().setFromBytes(source, offset);    
-    }
-
-    @Override
-    public QuadraticElement twice() {
-        return duplicate().twice();    
-    }
-
-    @Override
-    public QuadraticElement mul(int z) {
-        return duplicate().mul(z);    
-    }
-
-    @Override
-    public QuadraticElement square() {
-        return duplicate().square();    
-    }
-
-    @Override
-    public QuadraticElement invert() {
-        return duplicate().invert();    
-    }
-
-    @Override
-    public QuadraticElement negate() {
-        return duplicate().negate();    
-    }
-
-    @Override
-    public QuadraticElement add(Element e) {
-        return duplicate().add(e);    
-    }
-
-    @Override
-    public QuadraticElement sub(Element e) {
-        return duplicate().sub(e);    
-    }
-
-    @Override
-    public QuadraticElement mul(Element e) {
-        return duplicate().mul(e);    
-    }
-
-    @Override
-    public QuadraticElement mul(BigInteger n) {
-        return duplicate().mul(n);    
-    }
-
-    @Override
-    public QuadraticElement mulZn(Element e) {
-        return duplicate().mulZn(e);    
-    }
-
-    @Override
-    public QuadraticElement sqrt() {
-        return duplicate().sqrt();    
-    }
-
-    @Override
-    public QuadraticElement powZn(Element n) {
-        return duplicate().powZn(n);    
-    }
-
-    @Override
-    public QuadraticElement setFromHash(byte[] source, int offset, int length) {
-        return duplicate().setFromHash(source, offset, length);    
-    }
-
-    @Override
-    public int setFromBytesCompressed(byte[] source) {
-        return duplicate().setFromBytesCompressed(source);    
-    }
-
-    @Override
-    public int setFromBytesCompressed(byte[] source, int offset) {
-        return duplicate().setFromBytesCompressed(source, offset);    
-    }
-
-    @Override
-    public int setFromBytesX(byte[] source) {
-        return duplicate().setFromBytesX(source);    
-    }
-
-    @Override
-    public int setFromBytesX(byte[] source, int offset) {
-        return duplicate().setFromBytesX(source, offset);    
+    public QuadraticElement duplicate() {
+        return super.duplicate();
     }
 
     @Override
     public Element getImmutable() {
-        return this;
+        return (QuadraticElement) this;
+    }
+
+    @Override
+    public QuadraticElement set(Element e) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement set(int value) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement set(BigInteger value) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement setToZero() {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement setToOne() {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement setToRandom() {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public int setFromBytes(byte[] source, int offset) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public QuadraticElement twice() {
+        return (QuadraticElement) super.duplicate().twice().getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement mul(int z) {
+        return (QuadraticElement) super.duplicate().mul(z).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement square() {
+        return (QuadraticElement) super.duplicate().square().getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement invert() {
+        return (QuadraticElement) super.duplicate().invert().getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement negate() {
+        return (QuadraticElement) super.duplicate().negate().getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement add(Element e) {
+        return (QuadraticElement) super.duplicate().add(e).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement sub(Element e) {
+        return (QuadraticElement) super.duplicate().sub(e).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement mul(Element e) {
+        return (QuadraticElement) super.duplicate().mul(e).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement mul(BigInteger n) {
+        return (QuadraticElement) super.duplicate().mul(n).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement mulZn(Element e) {
+        return (QuadraticElement) super.duplicate().mulZn(e).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement sqrt() {
+        return (QuadraticElement) super.duplicate().sqrt().getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement powZn(Element n) {
+        return (QuadraticElement) super.duplicate().powZn(n).getImmutable();    
+    }
+
+    @Override
+    public QuadraticElement setFromHash(byte[] source, int offset, int length) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public int setFromBytesCompressed(byte[] source) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public int setFromBytesCompressed(byte[] source, int offset) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public int setFromBytesX(byte[] source) {
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public int setFromBytesX(byte[] source, int offset) {
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source) {
-        return duplicate().setFromBytes(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public Element pow(BigInteger n) {
-        return duplicate().pow(n);    
+        return (QuadraticElement) super.duplicate().pow(n).getImmutable();    
     }
 
     @Override
     public Element halve() {
-        return duplicate().halve();    
+        return (QuadraticElement) super.duplicate().halve().getImmutable();    
     }
 
     @Override
     public Element div(Element element) {
-        return duplicate().div(element);    
+        return (QuadraticElement) super.duplicate().div(element).getImmutable();    
     }
 
 }

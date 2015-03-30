@@ -13,7 +13,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.map.AbstractMillerPairingPreProcessing
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeATateProjectiveMillerPairingMap extends AbstractMillerPairingMap {
     protected TypeAPairing pairing;
@@ -125,6 +125,10 @@ public class TypeATateProjectiveMillerPairingMap extends AbstractMillerPairingMa
 
     public PairingPreProcessing pairing(Point in1) {
         return new TypeATateProjectiveMillerPairingPreProcessing(in1);
+    }
+
+    public boolean isProductPairingSupported() {
+        return true;
     }
 
     public Element pairing(Element[] in1, Element[] in2) {

@@ -5,11 +5,10 @@ import it.unisa.dia.gas.jpbc.PairingPreProcessing;
 import it.unisa.dia.gas.jpbc.Point;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public abstract class AbstractMillerPairingPreProcessing implements PairingPreProcessing {
 
-    protected Point in1;
     protected AbstractMillerPairingMap.MillerPreProcessingInfo processingInfo;
 
 
@@ -17,7 +16,6 @@ public abstract class AbstractMillerPairingPreProcessing implements PairingPrePr
     }
 
     protected AbstractMillerPairingPreProcessing(Point in1, int processingInfoSize) {
-        this.in1 = in1;
         this.processingInfo = new AbstractMillerPairingMap.MillerPreProcessingInfo(processingInfoSize);
     }
 

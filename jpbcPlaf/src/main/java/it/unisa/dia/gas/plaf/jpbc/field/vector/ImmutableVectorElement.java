@@ -5,13 +5,12 @@ import it.unisa.dia.gas.jpbc.Element;
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class ImmutableVectorElement<E extends Element> extends VectorElement<E> {
-    
+
     public ImmutableVectorElement(VectorElement element) {
-        super(element.field);
-        this.field = element.field;
+        super(element.getField());
 
         this.coeff.clear();
         for (int i = 0; i < field.n; i++)
@@ -21,123 +20,133 @@ public class ImmutableVectorElement<E extends Element> extends VectorElement<E> 
     }
 
     @Override
+    public VectorElement<E> duplicate() {
+        return super.duplicate();
+    }
+
+    @Override
+    public VectorElement<E> getImmutable() {
+        return this;
+    }
+
+    @Override
     public VectorElement set(Element e) {
-        return duplicate().set(e);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement set(int value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement set(BigInteger value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement twice() {
-        return duplicate().twice();    
+        return (VectorElement) duplicate().twice().getImmutable();
     }
 
     @Override
     public VectorElement setToZero() {
-        return duplicate().setToZero();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement setToOne() {
-        return duplicate().setToOne();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement setToRandom() {
-        return duplicate().setToRandom();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source, int offset) {
-        return duplicate().setFromBytes(source, offset);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public VectorElement square() {
-        return duplicate().square();    
+        return (VectorElement) duplicate().square().getImmutable();
     }
 
     @Override
     public VectorElement invert() {
-        return duplicate().invert();    
+        return (VectorElement) duplicate().invert().getImmutable();
     }
 
     @Override
     public VectorElement negate() {
-        return duplicate().negate();    
+        return (VectorElement) duplicate().negate().getImmutable();
     }
 
     @Override
     public VectorElement add(Element e) {
-        return duplicate().add(e);    
+        return (VectorElement) duplicate().add(e).getImmutable();
     }
 
     @Override
     public VectorElement mul(Element e) {
-        return duplicate().mul(e);    
+        return (VectorElement) duplicate().mul(e).getImmutable();
     }
 
     @Override
     public VectorElement mul(BigInteger n) {
-        return duplicate().mul(n);    
+        return (VectorElement) duplicate().mul(n).getImmutable();
     }
 
     @Override
     public VectorElement mulZn(Element e) {
-        return (VectorElement) duplicate().mulZn(e);
+        return (VectorElement) duplicate().mulZn(e).getImmutable();
     }
 
     @Override
     public VectorElement powZn(Element e) {
-        return duplicate().powZn(e);    
+        return (VectorElement) duplicate().powZn(e).getImmutable();
     }
 
     @Override
     public VectorElement setFromHash(byte[] source, int offset, int length) {
-        return duplicate().setFromHash(source, offset, length);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source) {
-        return duplicate().setFromBytes(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public Element pow(BigInteger n) {
-        return duplicate().pow(n);    
+        return duplicate().pow(n).getImmutable();
     }
 
     @Override
     public Element halve() {
-        return duplicate().halve();    
+        return duplicate().halve().getImmutable();
     }
 
     @Override
     public VectorElement sub(Element element) {
-        return duplicate().sub(element);    
+        return (VectorElement) duplicate().sub(element).getImmutable();
     }
 
     @Override
     public Element div(Element element) {
-        return duplicate().div(element);
+        return duplicate().div(element).getImmutable();
     }
 
     @Override
     public VectorElement mul(int z) {
-        return duplicate().mul(z);    
+        return (VectorElement) duplicate().mul(z).getImmutable();
     }
 
     @Override
     public VectorElement sqrt() {
-        return duplicate().sqrt();    
+        return (VectorElement) duplicate().sqrt().getImmutable();
     }
-    
+
 }

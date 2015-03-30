@@ -5,16 +5,15 @@ import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractFieldOver;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class PolyField<F extends Field> extends AbstractFieldOver<F, PolyElement> {
 
 
-    public PolyField(Random random, Field targetField) {
-        super(random, (F) targetField);
+    public PolyField(SecureRandom random, F targetField) {
+        super(random, targetField);
     }
 
     public PolyField(F targetField) {
@@ -27,15 +26,15 @@ public class PolyField<F extends Field> extends AbstractFieldOver<F, PolyElement
     }
 
     public BigInteger getOrder() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public PolyElement getNqr() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public int getLengthInBytes() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
 }

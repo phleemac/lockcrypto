@@ -10,19 +10,18 @@ import it.unisa.dia.gas.plaf.jpbc.field.poly.PolyModField;
 import it.unisa.dia.gas.plaf.jpbc.field.quadratic.QuadraticField;
 import it.unisa.dia.gas.plaf.jpbc.field.z.ZrField;
 import it.unisa.dia.gas.plaf.jpbc.pairing.AbstractPairing;
-import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.parameters.PropertiesParameters;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeDPairing extends AbstractPairing {
-    protected CurveParameters curveParams;
+    protected PairingParameters curveParams;
 
     protected int k;
 
@@ -33,13 +32,13 @@ public class TypeDPairing extends AbstractPairing {
     protected Element nqrInverse, nqrInverseSquare;
     protected BigInteger tateExp, phikOnr;
 
-    protected Field Fq, Fqx;
+    protected Field Fq;
     protected Field<? extends Point<Polynomial>> Fqk;
     protected PolyModField Fqd;
     protected CurveField Eq, Etwist;
 
 
-    public TypeDPairing(Random random, CurveParameters curveParams) {
+    public TypeDPairing(SecureRandom random, PairingParameters curveParams) {
         super(random);
 
         this.curveParams = curveParams;
@@ -49,7 +48,7 @@ public class TypeDPairing extends AbstractPairing {
         initFields();
     }
 
-    public TypeDPairing(CurveParameters curveParams) {
+    public TypeDPairing(PairingParameters curveParams) {
         this(new SecureRandom(), curveParams);
     }
 
@@ -59,8 +58,8 @@ public class TypeDPairing extends AbstractPairing {
     }
 
 
-    public DefaultCurveParameters saveTwist() {
-        DefaultCurveParameters params = (DefaultCurveParameters) curveParams;
+    public PropertiesParameters saveTwist() {
+        PropertiesParameters params = (PropertiesParameters) curveParams;
 
         params.putBytes("twist.a", Etwist.getA().toBytes());
         params.putBytes("twist.b", Etwist.getB().toBytes());
@@ -102,7 +101,6 @@ public class TypeDPairing extends AbstractPairing {
 
         // Init Fqx
         PolyField polyField = initPoly();
-        Fqx = polyField;
 
         // Init the irreducible polynomial
         int d = k / 2;
@@ -110,7 +108,7 @@ public class TypeDPairing extends AbstractPairing {
         PolyElement<Element> irreduciblePoly = polyField.newElement();
         List<Element> irreduciblePolyCoeff = irreduciblePoly.getCoefficients();
         for (int i = 0; i < d; i++) {
-            irreduciblePolyCoeff.add(polyField.getTargetField().newElement().set(curveParams.getBigInteger("coeff" + i)));
+            irreduciblePolyCoeff.add(polyField.getTargetField().newElement().set(curveParams.getBigIntegerAt("coeff", i)));
         }
         irreduciblePolyCoeff.add(polyField.getTargetField().newElement().setToOne());
 
@@ -138,10 +136,8 @@ public class TypeDPairing extends AbstractPairing {
         // init etwist
         if (curveParams.containsKey("twist.a")) {
             // load the twist
-            Element twistA = Fqd.newElement();
-            twistA.setFromBytes(curveParams.getBytes("twist.a"));
-            Element twistB = Fqd.newElement();
-            twistB.setFromBytes(curveParams.getBytes("twist.b"));
+            Element twistA = Fqd.newElementFromBytes(curveParams.getBytes("twist.a"));
+            Element twistB = Fqd.newElementFromBytes(curveParams.getBytes("twist.b"));
 
             Etwist = new CurveField(random, twistA, twistB, r, curveParams.getBytes("twist.gen"));
         } else {

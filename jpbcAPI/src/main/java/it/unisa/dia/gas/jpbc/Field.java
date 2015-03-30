@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Represents an algebraic structure.
  *
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  * @since 1.0.0
  */
 public interface Field<E extends Element> {
@@ -33,10 +33,50 @@ public interface Field<E extends Element> {
      * 
      * @param value the value of the new element.
      * @return a new element whose value is passed as parameter.
-     * @see Element#set(BigInteger)
+     * @see Element#set(java.math.BigInteger)
      * @since 1.0.0
      */
     E newElement(BigInteger value);
+
+    /**
+     * Returns a new element whose value is copied from the passed element.
+     *
+     * @param e the element whose value is copied.
+     * @return a new element whose value is copied from the passed element.
+     * @since 2.0.0
+     */
+    E newElement(E e);
+
+    /**
+     * Returns a new element whose value is set deterministically from the length bytes stored
+     * in the source parameter starting from the passed offset.
+     *
+     * @param source the buffer data.
+     * @param offset the starting offset.
+     * @param length the number of bytes to be used.
+     * @return this element modified.
+     * @since 2.0.0
+     */
+    E newElementFromHash(byte[] source, int offset, int length);
+
+    /**
+     * Returns a new element whose value is set from the buffer source.
+     *
+     * @param source the source of bytes.
+     * @return the number of bytes read.
+     * @since 2.0.0
+     */
+    E newElementFromBytes(byte[] source);
+
+    /**
+     * Returns a new element whose value is set from the buffer source starting from offset.
+     *
+     * @param source the source of bytes.
+     * @param offset the starting offset.
+     * @return the number of bytes read.
+     * @since 2.0.0
+     */
+    E newElementFromBytes(byte[] source, int offset);
 
     /**
      * Returns a new element whose value is zero.
@@ -97,8 +137,23 @@ public interface Field<E extends Element> {
     int getLengthInBytes();
 
     /**
-     * Computes the component-wise twice
-     * in one shot.
+     * Returns the length in bytes needed to represent an element of this Field.
+     *
+     * @return the length in bytes needed to represent an element of this Field.
+     * @since 1.0.0
+     */
+    int getLengthInBytes(Element e);
+
+    /**
+     * Returns the length in bytes needed to canonical represent an element of this Field.
+     *
+     * @return the length in bytes needed to canonical represent an element of this Field.
+     * @since 2.0.0
+     */
+    int getCanonicalRepresentationLengthInBytes();
+
+    /**
+     * Computes the component-wise twice.
      *
      * @param elements the vector of elements to be twiced.
      * @return elements twiced.
@@ -107,8 +162,7 @@ public interface Field<E extends Element> {
     Element[] twice(Element[] elements);
 
     /**
-     * Computes the component-wise addition between a and b
-     * in one shot.
+     * Computes the component-wise addition between a and b.
      *
      * @param a an array of elements of the field
      * @param b another array of elements of the field to be added to a
@@ -124,7 +178,7 @@ public interface Field<E extends Element> {
      * @return the ElementPowPreProcessing instance.
      * @since 1.2.0
      */
-    ElementPowPreProcessing pow(byte[] source);
+    ElementPowPreProcessing getElementPowPreProcessingFromBytes(byte[] source);
 
     /**
      * Reads an ElementPowPreProcessing from the buffer source starting from offset.
@@ -134,5 +188,5 @@ public interface Field<E extends Element> {
      * @return the ElementPowPreProcessing instance.
      * @since 1.2.0
      */
-    ElementPowPreProcessing pow(byte[] source, int offset);
+    ElementPowPreProcessing getElementPowPreProcessingFromBytes(byte[] source, int offset);
 }

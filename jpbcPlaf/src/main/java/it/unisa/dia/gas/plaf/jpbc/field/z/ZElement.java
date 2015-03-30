@@ -1,26 +1,23 @@
 package it.unisa.dia.gas.plaf.jpbc.field.z;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.plaf.jpbc.util.Arrays;
 
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class ZElement extends AbstractZElement {
-
-//    protected BigInteger value;
+public class ZElement extends AbstractZElement<ZField> {
 
 
-    public ZElement(Field field) {
+    public ZElement(ZField field) {
         super(field);
 
         this.value = BigInteger.ZERO;
     }
 
-    public ZElement(Field field, BigInteger value) {
+    public ZElement(ZField field, BigInteger value) {
         super(field);
 
         this.value = value;
@@ -33,11 +30,12 @@ public class ZElement extends AbstractZElement {
     }
 
 
+    public ZField getField() {
+        return field;
+    }
+
     @Override
     public Element getImmutable() {
-        if (isImmutable())
-            return this;
-
         throw new IllegalStateException("Not implemented yet!!!");
     }
 
@@ -188,7 +186,7 @@ public class ZElement extends AbstractZElement {
     }
 
     public boolean isEqual(Element e) {
-        return this == e || value.compareTo(((ZElement) e).value) == 0;
+        return this == e || (e instanceof ZElement && value.compareTo(((ZElement) e).value) == 0);
 
     }
 
@@ -207,12 +205,6 @@ public class ZElement extends AbstractZElement {
 
     public String toString() {
         return value.toString();
-    }
-
-    public boolean equals(Object o) {
-        if (o instanceof ZElement)
-            return isEqual((Element) o);
-        return isEqual((ZElement) o);
     }
 
 }

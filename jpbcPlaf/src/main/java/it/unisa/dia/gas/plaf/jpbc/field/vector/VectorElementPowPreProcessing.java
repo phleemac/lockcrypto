@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class VectorElementPowPreProcessing implements ElementPowPreProcessing {
     protected VectorField field;
@@ -19,7 +19,7 @@ public class VectorElementPowPreProcessing implements ElementPowPreProcessing {
         this.field = vector.getField();
         this.processings = new ElementPowPreProcessing[vector.getSize()];
         for (int i = 0; i < processings.length; i++) {
-            processings[i] = vector.getAt(i).pow();
+            processings[i] = vector.getAt(i).getElementPowPreProcessing();
         }
     }
 

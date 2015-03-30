@@ -1,26 +1,25 @@
 package it.unisa.dia.gas.plaf.jpbc.field.poly;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.FieldOver;
 import it.unisa.dia.gas.jpbc.Polynomial;
 import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractElement;
+import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractFieldOver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public abstract class AbstractPolyElement<E extends Element> extends AbstractElement implements Polynomial<E> {
+public abstract class AbstractPolyElement<E extends Element, F extends AbstractFieldOver>
+        extends AbstractElement<F> implements Polynomial<E> {
 
-    protected FieldOver field;
     protected List<E> coefficients;
 
 
-    protected AbstractPolyElement(FieldOver field) {
+    protected AbstractPolyElement(F field) {
         super(field);
 
-        this.field = field;
         this.coefficients = new ArrayList<E>();
     }
 

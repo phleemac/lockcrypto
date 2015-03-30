@@ -1,36 +1,34 @@
 package it.unisa.dia.gas.plaf.jpbc.field.z;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.plaf.jpbc.util.Arrays;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class ZrElement extends AbstractZElement {
+public class ZrElement<F extends ZrField> extends AbstractZElement<F> {
 
-//    protected BigInteger value;
     protected BigInteger order;
 
 
-    public ZrElement(Field field) {
+    public ZrElement(F field) {
         super(field);
 
         this.value = BigInteger.ZERO;
         this.order = field.getOrder();
     }
 
-    public ZrElement(Field field, BigInteger value) {
+    public ZrElement(F field, BigInteger value) {
         super(field);
 
         this.value = value;
         this.order = field.getOrder();
     }
 
-    public ZrElement(ZrElement zrElement) {
+    public ZrElement(ZrElement<F> zrElement) {
         super(zrElement.getField());
 
         this.value = zrElement.value;
@@ -38,20 +36,21 @@ public class ZrElement extends AbstractZElement {
     }
 
 
+    public F getField() {
+        return field;
+    }
+
     @Override
     public Element getImmutable() {
-        if (isImmutable())
-            return this;
-
         return new ImmutableZrElement(this);
     }
 
-    public ZrElement duplicate() {
-        return new ZrElement(this);
+    public ZrElement<F> duplicate() {
+        return new ZrElement<F>(this);
     }
 
     public ZrElement set(Element value) {
-        this.value = ((AbstractZElement) value).value.mod(order);
+        this.value = value.toBigInteger().mod(order);
 
         return this;
     }
@@ -102,7 +101,7 @@ public class ZrElement extends AbstractZElement {
     }
 
     public ZrElement setToRandom() {
-        this.value = new BigInteger(order.bitLength(), field.getRandom()).mod(order);
+        this.value = BigIntegerUtils.getRandom(order, field.getRandom());
 
         return this;
     }
@@ -165,7 +164,12 @@ public class ZrElement extends AbstractZElement {
     }
 
     public ZrElement invert() {
-        value = value.modInverse(order);
+        try {
+            value = value.modInverse(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw (RuntimeException) e;
+        }
 
         return this;
     }
@@ -279,7 +283,7 @@ public class ZrElement extends AbstractZElement {
     }
 
     public boolean isEqual(Element e) {
-        return this == e || value.compareTo(((ZrElement) e).value) == 0;
+        return this == e || (e instanceof  ZrElement && value.compareTo(((ZrElement) e).value) == 0);
 
     }
 
@@ -319,12 +323,6 @@ public class ZrElement extends AbstractZElement {
 
     public String toString() {
         return value.toString();
-    }
-
-    public boolean equals(Object o) {
-        if (o instanceof ZrElement)
-            return isEqual((Element) o);
-        return isEqual((ZrElement) o);
     }
 
 }

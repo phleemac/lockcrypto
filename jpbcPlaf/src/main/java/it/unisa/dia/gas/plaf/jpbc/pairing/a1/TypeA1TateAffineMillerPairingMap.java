@@ -11,7 +11,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.map.AbstractMillerPairingMap;
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeA1TateAffineMillerPairingMap extends AbstractMillerPairingMap<Element> {
     protected TypeA1Pairing pairing;
@@ -72,6 +72,10 @@ public class TypeA1TateAffineMillerPairingMap extends AbstractMillerPairingMap<E
         */
 
         return new GTFiniteElement(this, (GTFiniteField) pairing.getGT(), out);
+    }
+
+    public boolean isProductPairingSupported() {
+        return true;
     }
 
     public Element pairing(Element[] in1, Element[] in2) {

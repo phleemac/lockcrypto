@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Common interface for the exponentiation.
  *
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  * @since 1.2.0
  */
 public interface ElementPow {
@@ -15,7 +15,7 @@ public interface ElementPow {
      *
      * @param n the exponent of the power.
      * @return the computed power.
-     * @since 1.0.0
+     * @since 1.2.0
      */
     Element pow(BigInteger n);
 
@@ -24,7 +24,7 @@ public interface ElementPow {
      *
      * @param n the exponent of the power.
      * @return the computed power.
-     * @since 1.0.0
+     * @since 1.2.0
      */
     Element powZn(Element n);
 

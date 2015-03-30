@@ -1,26 +1,25 @@
 package it.unisa.dia.gas.plaf.jpbc.pairing.e;
 
-import it.unisa.dia.gas.jpbc.CurveGenerator;
-import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.PairingParameters;
+import it.unisa.dia.gas.jpbc.PairingParametersGenerator;
 import it.unisa.dia.gas.plaf.jpbc.field.curve.CurveField;
 import it.unisa.dia.gas.plaf.jpbc.field.z.ZrField;
-import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.parameters.PropertiesParameters;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class TypeECurveGenerator implements CurveGenerator {
-    protected Random random;
+public class TypeECurveGenerator implements PairingParametersGenerator {
+    protected SecureRandom random;
     protected int rBits, qBits;
 
 
-    public TypeECurveGenerator(Random random, int rBits, int qBits) {
+    public TypeECurveGenerator(SecureRandom random, int rBits, int qBits) {
         this.random = random;
         this.rBits = rBits;
         this.qBits = qBits;
@@ -31,7 +30,7 @@ public class TypeECurveGenerator implements CurveGenerator {
     }
 
     
-    public CurveParameters generate() {
+    public PairingParameters generate() {
         // 3 takes 2 bits to represent
         BigInteger q;
         BigInteger r;
@@ -85,7 +84,7 @@ public class TypeECurveGenerator implements CurveGenerator {
                 //use q as a temp variable
                 q = BigInteger.ZERO.setBit(hBits + 1);
 
-                h = BigIntegerUtils.getRandom(q);
+                h = BigIntegerUtils.getRandom(q, random);
                 h = h.multiply(h).multiply(BigIntegerUtils.THREE);
 
                 //finally q takes the value it should
@@ -106,7 +105,7 @@ public class TypeECurveGenerator implements CurveGenerator {
         if (!curveField.newRandomElement().mul(n).isZero())
             curveField.twist();
 
-        DefaultCurveParameters params = new DefaultCurveParameters();
+        PropertiesParameters params = new PropertiesParameters();
         params.put("type", "e");
         params.put("q", q.toString());
         params.put("r", r.toString());
@@ -131,8 +130,8 @@ public class TypeECurveGenerator implements CurveGenerator {
         Integer rBits = Integer.parseInt(args[0]);
         Integer qBits = Integer.parseInt(args[1]);
 
-        CurveGenerator generator = new TypeECurveGenerator(rBits, qBits);
-        DefaultCurveParameters curveParams = (DefaultCurveParameters) generator.generate();
+        PairingParametersGenerator generator = new TypeECurveGenerator(rBits, qBits);
+        PairingParameters curveParams = generator.generate();
 
         System.out.println(curveParams.toString(" "));
     }

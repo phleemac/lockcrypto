@@ -1,21 +1,19 @@
 package it.unisa.dia.gas.plaf.jpbc.pairing.a;
 
-import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.PairingParameters;
 import it.unisa.dia.gas.jpbc.Point;
 import it.unisa.dia.gas.plaf.jpbc.field.curve.CurveField;
 import it.unisa.dia.gas.plaf.jpbc.field.gt.GTFiniteField;
 import it.unisa.dia.gas.plaf.jpbc.field.quadratic.DegreeTwoExtensionQuadraticField;
 import it.unisa.dia.gas.plaf.jpbc.field.z.ZrField;
 import it.unisa.dia.gas.plaf.jpbc.pairing.AbstractPairing;
-import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeAPairing extends AbstractPairing {
     public static final String NAF_MILLER_PROJECTTIVE_METHOD = "naf-miller-projective";
@@ -25,7 +23,6 @@ public class TypeAPairing extends AbstractPairing {
     protected int exp2;
     protected int exp1;
     protected int sign1;
-    protected int sign0;
 
     protected BigInteger r;
     protected BigInteger q; 
@@ -33,14 +30,14 @@ public class TypeAPairing extends AbstractPairing {
 
     protected BigInteger phikOnr;
 
-    protected BigInteger genNoCofac;
+    protected byte[] genNoCofac;
 
     protected Field Fq;
     protected Field<? extends Point> Fq2;
     protected Field<? extends Point> Eq;
 
 
-    public TypeAPairing(Random random, CurveParameters params) {
+    public TypeAPairing(SecureRandom random, PairingParameters params) {
         super(random);
 
         initParams(params);
@@ -48,12 +45,12 @@ public class TypeAPairing extends AbstractPairing {
         initFields();
     }
 
-    public TypeAPairing(CurveParameters params) {
+    public TypeAPairing(PairingParameters params) {
         this(new SecureRandom(), params);
     }
 
 
-    protected void initParams(CurveParameters curveParams) {
+    protected void initParams(PairingParameters curveParams) {
         // validate the type
         String type = curveParams.getString("type");
         if (type == null || !"a".equalsIgnoreCase(type))
@@ -63,13 +60,12 @@ public class TypeAPairing extends AbstractPairing {
         exp2 = curveParams.getInt("exp2");
         exp1 = curveParams.getInt("exp1");
         sign1 = curveParams.getInt("sign1");
-        sign0 = curveParams.getInt("sign0");
 
         r = curveParams.getBigInteger("r"); // r = 2^exp2 + sign1 * 2^exp1 + sign0 * 1
         q = curveParams.getBigInteger("q"); // we work in E(F_q) (and E(F_q^2))
         h = curveParams.getBigInteger("h");  // r * h = q + 1
 
-        genNoCofac = curveParams.getBigInteger("genNoCofac", null);
+        genNoCofac = curveParams.getBytes("genNoCofac", null);
     }
 
 
@@ -119,7 +115,7 @@ public class TypeAPairing extends AbstractPairing {
     }
 
 
-    protected void initMap(CurveParameters curveParams) {
+    protected void initMap(PairingParameters curveParams) {
         String method = curveParams.getString("method", NAF_MILLER_PROJECTTIVE_METHOD);
 
         if (NAF_MILLER_PROJECTTIVE_METHOD.endsWith(method)) {

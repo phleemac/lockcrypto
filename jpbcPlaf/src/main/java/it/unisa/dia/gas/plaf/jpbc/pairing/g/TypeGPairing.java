@@ -15,15 +15,12 @@ import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeGPairing extends AbstractPairing {
-    protected CurveParameters curveParams;
-
-    protected int k;
+    protected PairingParameters curveParams;
 
     protected BigInteger q, n, r, h;
     protected BigInteger a, b;
@@ -31,7 +28,7 @@ public class TypeGPairing extends AbstractPairing {
 
     protected PolyModElement xPowq, xPowq2, xPowq3, xPowq4;
     protected Element nqrInverse, nqrInverseSquare;
-    protected BigInteger tateExp, phikOnr;
+    protected BigInteger phikOnr;
 
     protected Field Fq, Fqx;
     protected Field<? extends Point<Polynomial>> Fqk;
@@ -39,11 +36,11 @@ public class TypeGPairing extends AbstractPairing {
     protected CurveField Eq, Etwist;
 
 
-    public TypeGPairing(CurveParameters curveParams) {
+    public TypeGPairing(PairingParameters curveParams) {
         this(new SecureRandom(), curveParams);
     }
 
-    public TypeGPairing(Random random, CurveParameters curveParams) {
+    public TypeGPairing(SecureRandom random, PairingParameters curveParams) {
         super(random);
 
         this.curveParams = curveParams;
@@ -97,7 +94,7 @@ public class TypeGPairing extends AbstractPairing {
         PolyElement irreduciblePoly = (PolyElement) Fqx.newElement();
         List<Element> irreduciblePolyCoeff = irreduciblePoly.getCoefficients();
         for (int i = 0; i < 5; i++)
-            irreduciblePolyCoeff.add(Fq.newElement().set(curveParams.getBigInteger("coeff" + i)));
+            irreduciblePolyCoeff.add(Fq.newElement().set(curveParams.getBigIntegerAt("coeff", i)));
         irreduciblePolyCoeff.add(Fq.newOneElement());
 
         // init Fq12

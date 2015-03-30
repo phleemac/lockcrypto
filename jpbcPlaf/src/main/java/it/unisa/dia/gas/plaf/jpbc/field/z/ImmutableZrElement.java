@@ -5,7 +5,7 @@ import it.unisa.dia.gas.jpbc.Element;
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class ImmutableZrElement extends ZrElement {
 
@@ -15,123 +15,133 @@ public class ImmutableZrElement extends ZrElement {
     }
 
     @Override
+    public Element getImmutable() {
+        return this;
+    }
+
+    @Override
+    public ZrElement duplicate() {
+        return super.duplicate();
+    }
+
+    @Override
     public ZrElement set(Element value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement set(int value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement set(BigInteger value) {
-        return duplicate().set(value);    
-    }
-
-    @Override
-    public ZrElement twice() {
-        return duplicate().twice();    
-    }
-
-    @Override
-    public ZrElement mul(int z) {
-        return duplicate().mul(z);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement setToZero() {
-        return duplicate().setToZero();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement setToOne() {
-        return duplicate().setToOne();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement setToRandom() {
-        return duplicate().setToRandom();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public ZrElement setFromHash(byte[] source, int offset, int length) {
-        return duplicate().setFromHash(source, offset, length);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source) {
-        return duplicate().setFromBytes(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source, int offset) {
-        return duplicate().setFromBytes(source, offset);    
+        throw new IllegalStateException("Invalid call on an immutable element");
+    }
+
+    @Override
+    public ZrElement twice() {
+        return (ZrElement) super.duplicate().twice().getImmutable();
+    }
+
+    @Override
+    public ZrElement mul(int z) {
+        return (ZrElement) super.duplicate().mul(z).getImmutable();
     }
 
     @Override
     public ZrElement square() {
-        return duplicate().square();    
+        return (ZrElement) super.duplicate().square().getImmutable();
     }
 
     @Override
     public ZrElement invert() {
-        return duplicate().invert();    
+        return (ZrElement) super.duplicate().invert().getImmutable();
     }
 
     @Override
     public ZrElement halve() {
-        return duplicate().halve();    
+        return (ZrElement) super.duplicate().halve().getImmutable();
     }
 
     @Override
     public ZrElement negate() {
-        return duplicate().negate();    
+        return (ZrElement) super.duplicate().negate().getImmutable();
     }
 
     @Override
     public ZrElement add(Element element) {
-        return duplicate().add(element);    
+        return (ZrElement) super.duplicate().add(element).getImmutable();
     }
 
     @Override
     public ZrElement sub(Element element) {
-        return duplicate().sub(element);    
+        return (ZrElement) super.duplicate().sub(element).getImmutable();
     }
 
     @Override
     public ZrElement div(Element element) {
-        return duplicate().div(element);    
+        return (ZrElement) super.duplicate().div(element).getImmutable();
     }
 
     @Override
     public ZrElement mul(Element element) {
-        return duplicate().mul(element);    
+        return (ZrElement) super.duplicate().mul(element).getImmutable();
     }
 
     @Override
     public ZrElement mul(BigInteger n) {
-        return duplicate().mul(n);    
+        return (ZrElement) super.duplicate().mul(n).getImmutable();
     }
 
     @Override
     public ZrElement mulZn(Element z) {
-        return duplicate().mulZn(z);    
+        return (ZrElement) super.duplicate().mulZn(z).getImmutable();
     }
 
     @Override
     public ZrElement sqrt() {
-        return duplicate().sqrt();    
+        return (ZrElement) super.duplicate().sqrt().getImmutable();
     }
 
     @Override
     public ZrElement pow(BigInteger n) {
-        return duplicate().pow(n);    
+        return (ZrElement) super.duplicate().pow(n).getImmutable();
     }
 
     @Override
     public ZrElement powZn(Element n) {
-        return duplicate().powZn(n);    
+        return (ZrElement) super.duplicate().powZn(n).getImmutable();
     }
 
 }

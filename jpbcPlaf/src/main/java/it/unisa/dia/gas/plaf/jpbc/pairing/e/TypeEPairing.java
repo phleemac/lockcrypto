@@ -1,7 +1,7 @@
 package it.unisa.dia.gas.plaf.jpbc.pairing.e;
 
-import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.PairingParameters;
 import it.unisa.dia.gas.jpbc.Point;
 import it.unisa.dia.gas.plaf.jpbc.field.curve.CurveField;
 import it.unisa.dia.gas.plaf.jpbc.field.gt.GTFiniteField;
@@ -10,10 +10,9 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.AbstractPairing;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeEPairing extends AbstractPairing {
     protected int exp2;
@@ -31,14 +30,13 @@ public class TypeEPairing extends AbstractPairing {
     protected Point R;
 
     protected Field Fq;
-    protected Field<? extends Point> Eq;
 
 
-    public TypeEPairing(CurveParameters properties) {
+    public TypeEPairing(PairingParameters properties) {
         this(new SecureRandom(), properties);
     }
 
-    public TypeEPairing(Random random, CurveParameters properties) {
+    public TypeEPairing(SecureRandom random, PairingParameters properties) {
         super(random);
 
         initParams(properties);
@@ -46,7 +44,7 @@ public class TypeEPairing extends AbstractPairing {
         initFields();
     }
 
-    protected void initParams(CurveParameters curveParams) {
+    protected void initParams(PairingParameters curveParams) {
         // validate the type
         String type = curveParams.getString("type");
         if (type == null || !"e".equalsIgnoreCase(type))
@@ -76,7 +74,6 @@ public class TypeEPairing extends AbstractPairing {
 
         // Init Eq
         CurveField<Field> Eq = initEq();
-        this.Eq = Eq;
 
         // k=1, hence phikOnr = (q-1)/r
         phikonr = Fq.getOrder().subtract(BigInteger.ONE).divide(r);

@@ -4,16 +4,16 @@ import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractFieldOver;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class VectorField<F extends Field> extends AbstractFieldOver<F, VectorElement> {
     protected int n, lenInBytes;
 
 
-    public VectorField(Random random, F targetField, int n) {
+    public VectorField(SecureRandom random, F targetField, int n) {
         super(random, targetField);
 
         this.n = n;

@@ -5,24 +5,28 @@ import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
 import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractVectorElement;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
-    protected VectorField field;
+public class VectorElement<E extends Element> extends AbstractVectorElement<E, VectorField> {
 
 
     public VectorElement(VectorField field) {
         super(field);
-        this.field = field;
 
-        for (int i = 0; i < field.n; i++) {
+        for (int i = 0; i < field.n; i++)
             coeff.add((E) field.getTargetField().newElement());
-        }
     }
+
+    public VectorElement(VectorElement element) {
+        super(element.getField());
+
+        for (int i = 0; i < field.n; i++)
+            coeff.add((E) element.getAt(i).duplicate());
+    }
+
 
     public VectorElement(VectorField field, List<E> coeff) {
         super(field);
@@ -37,16 +41,10 @@ public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
     }
 
     public VectorElement<E> duplicate() {
-        List<Element> duplicatedCoeff = new ArrayList<Element>(coeff.size());
-
-        for (Element element : coeff) {
-            duplicatedCoeff.add(element.duplicate());
-        }
-
-        return new VectorElement(field, duplicatedCoeff);
+        return new VectorElement<E>(this);
     }
 
-    public Element getImmutable() {
+    public VectorElement<E> getImmutable() {
         return new ImmutableVectorElement<E>(this);
     }
 
@@ -219,7 +217,7 @@ public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
         return this;
     }
 
-    public ElementPowPreProcessing pow() {
+    public ElementPowPreProcessing getElementPowPreProcessing() {
         return new VectorElementPowPreProcessing(this);
     }
 
@@ -236,6 +234,11 @@ public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
     }
 
     public boolean isEqual(Element e) {
+        if (e == this)
+            return true;
+        if ((e instanceof VectorElement))
+            return false;
+
         VectorElement<E> element = (VectorElement<E>) e;
 
         for (int i = 0; i < field.n; i++) {
@@ -253,9 +256,9 @@ public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
     public int setFromBytes(byte[] source, int offset) {
         int len = offset;
         for (int i = 0, size = coeff.size(); i < size; i++) {
-            len+=coeff.get(i).setFromBytes(source, len);
+            len += coeff.get(i).setFromBytes(source, len);
         }
-        return len-offset;
+        return len - offset;
     }
 
     public byte[] toBytes() {
@@ -281,12 +284,6 @@ public class VectorElement<E extends Element> extends AbstractVectorElement<E> {
         }
         buffer.append("]");
         return buffer.toString();
-    }
-
-    public boolean equals(Object obj) {
-        if (obj instanceof VectorElement)
-            return isEqual((Element) obj);
-        return super.equals(obj);
     }
 
 }

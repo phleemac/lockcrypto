@@ -5,157 +5,165 @@ import it.unisa.dia.gas.jpbc.Element;
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class ImmutableCurveElement<E extends Element> extends CurveElement<E> {
+public class ImmutableCurveElement<E extends Element, F extends CurveField> extends CurveElement<E, F> {
 
-    public ImmutableCurveElement(CurveElement curveElement) {
+    public ImmutableCurveElement(CurveElement<E,F> curveElement) {
         super(curveElement);
-        this.x = (E) this.x.getImmutable();
-        this.y = (E) this.y.getImmutable();
+        this.x = (E) curveElement.getX().getImmutable();
+        this.y = (E) curveElement.getY().getImmutable();
 
         this.immutable = true;
     }
 
+    @Override
+    public CurveElement duplicate() {
+        return super.duplicate();
+    }
+
+    public Element getImmutable() {
+        return this;
+    }
 
     @Override
     public CurveElement set(Element e) {
-        return duplicate().set(e);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement set(int value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement set(BigInteger value) {
-        return duplicate().set(value);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement twice() {
-        return duplicate().twice();    
+        return (CurveElement) super.duplicate().twice().getImmutable();
     }
 
     @Override
     public CurveElement setToZero() {
-        return duplicate().setToZero();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement setToOne() {
-        return duplicate().setToOne();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement setToRandom() {
-        return duplicate().setToRandom();    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source, int offset) {
-        return duplicate().setFromBytes(source, offset);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public CurveElement square() {
-        return duplicate().square();    
+        return (CurveElement) super.duplicate().square().getImmutable();
     }
 
     @Override
     public CurveElement invert() {
-        return duplicate().invert();    
+        return (CurveElement) super.duplicate().invert().getImmutable();
     }
 
     @Override
     public CurveElement negate() {
-        return duplicate().negate();    
+        return (CurveElement) super.duplicate().negate().getImmutable();
     }
 
     @Override
     public CurveElement add(Element e) {
-        return duplicate().add(e);    
+        return (CurveElement) super.duplicate().add(e).getImmutable();
     }
 
     @Override
     public CurveElement mul(Element e) {
-        return duplicate().mul(e);    
+        return (CurveElement) super.duplicate().mul(e).getImmutable();
     }
 
     @Override
     public CurveElement mul(BigInteger n) {
-        return duplicate().mul(n);    
+        return (CurveElement) super.duplicate().mul(n).getImmutable();
     }
 
     @Override
     public CurveElement mulZn(Element e) {
-        return duplicate().mulZn(e);    
+        return (CurveElement) super.duplicate().mulZn(e).getImmutable();
     }
 
     @Override
     public CurveElement powZn(Element e) {
-        return duplicate().powZn(e);    
+        return (CurveElement) super.duplicate().powZn(e).getImmutable();
     }
 
     @Override
     public CurveElement setFromHash(byte[] source, int offset, int length) {
-        return duplicate().setFromHash(source, offset, length);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytesCompressed(byte[] source) {
-        return duplicate().setFromBytesCompressed(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytesCompressed(byte[] source, int offset) {
-        return duplicate().setFromBytesCompressed(source, offset);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytesX(byte[] source) {
-        return duplicate().setFromBytesX(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytesX(byte[] source, int offset) {
-        return duplicate().setFromBytesX(source, offset);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public int setFromBytes(byte[] source) {
-        return duplicate().setFromBytes(source);    
+        throw new IllegalStateException("Invalid call on an immutable element");
     }
 
     @Override
     public Element pow(BigInteger n) {
-        return duplicate().pow(n);    
+        return (CurveElement) super.duplicate().pow(n).getImmutable();
     }
 
     @Override
     public Element halve() {
-        return duplicate().halve();    
+        return (CurveElement) super.duplicate().halve().getImmutable();
     }
 
     @Override
     public Element sub(Element element) {
-        return duplicate().sub(element);    
+        return (CurveElement) super.duplicate().sub(element).getImmutable();
     }
 
     @Override
     public Element div(Element element) {
-        return duplicate().div(element);    
+        return (CurveElement) super.duplicate().div(element).getImmutable();
     }
 
     @Override
     public Element mul(int z) {
-        return duplicate().mul(z);    
+        return (CurveElement) super.duplicate().mul(z).getImmutable();
     }
 
     @Override
     public Element sqrt() {
-        return duplicate().sqrt();    
+        return (CurveElement) super.duplicate().sqrt().getImmutable();
     }
 
 }

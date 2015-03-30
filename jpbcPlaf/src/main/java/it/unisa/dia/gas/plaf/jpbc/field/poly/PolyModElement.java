@@ -6,30 +6,26 @@ import it.unisa.dia.gas.jpbc.Polynomial;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class PolyModElement<E extends Element> extends AbstractPolyElement<E> {
-    protected PolyModField field;
+public class PolyModElement<E extends Element> extends AbstractPolyElement<E, PolyModField> {
 
 
     public PolyModElement(PolyModField field) {
         super(field);
-        this.field = field;
 
-        for (int i = 0; i < field.n; i++) {
+        for (int i = 0; i < field.n; i++)
             coefficients.add((E) field.getTargetField().newElement());
-        }
     }
 
-    public PolyModElement(PolyModField field, List<E> coeff) {
-        super(field);
-        this.field = field;
+    public PolyModElement(PolyModElement<E> source) {
+        super(source.getField());
 
-        this.coefficients = coeff;
+        for (int i = 0, n = source.getSize(); i < n; i++)
+            coefficients.add((E) source.getCoefficient(i).duplicate());
     }
 
 
@@ -43,13 +39,7 @@ public class PolyModElement<E extends Element> extends AbstractPolyElement<E> {
     }
 
     public PolyModElement<E> duplicate() {
-        List<Element> duplicatedCoeff = new ArrayList<Element>(coefficients.size());
-
-        for (Element element : coefficients) {
-            duplicatedCoeff.add(element.duplicate());
-        }
-
-        return new PolyModElement(field, duplicatedCoeff);
+        return new PolyModElement<E>(this);
     }
 
     public PolyModElement<E> set(Element e) {
@@ -245,7 +235,7 @@ public class PolyModElement<E extends Element> extends AbstractPolyElement<E> {
                 return this;
 //            case 6:
             // TODO: port the PBC code
-//                throw new IllegalStateException("Not Implemented yet!!!");
+//                throw new IllegalStateException("Not Implemented yet!");
 /*
             mfptr p = res->field->data;
             element_t *dst = res->data, *s0, *s1 = e->data, *s2 = f->data;
@@ -465,6 +455,12 @@ public class PolyModElement<E extends Element> extends AbstractPolyElement<E> {
     }
 
     public boolean isEqual(Element e) {
+        if (e == this)
+            return true;
+
+        if (!(e instanceof PolyModElement))
+            return false;
+
         PolyModElement<E> element = (PolyModElement<E>) e;
 
         for (int i = 0; i < field.n; i++) {
@@ -510,12 +506,6 @@ public class PolyModElement<E extends Element> extends AbstractPolyElement<E> {
         }
         buffer.append("]");
         return buffer.toString();
-    }
-
-    public boolean equals(Object obj) {
-        if (obj instanceof PolyModElement)
-            return isEqual((Element) obj);
-        return super.equals(obj);
     }
 
 

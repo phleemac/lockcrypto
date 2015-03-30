@@ -5,10 +5,9 @@ import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class ZrField extends AbstractField<ZrElement> {
     protected BigInteger order;
@@ -21,7 +20,7 @@ public class ZrField extends AbstractField<ZrElement> {
         this(new SecureRandom(), order, null);
     }
 
-    public ZrField(Random random, BigInteger order) {
+    public ZrField(SecureRandom random, BigInteger order) {
         this(random, order, null);
     }
 
@@ -29,7 +28,7 @@ public class ZrField extends AbstractField<ZrElement> {
         this(new SecureRandom(), order, nqr);
     }
 
-    public ZrField(Random random, BigInteger order, BigInteger nqr) {
+    public ZrField(SecureRandom random, BigInteger order, BigInteger nqr) {
         super(random);
         this.order = order;
         this.orderIsOdd = BigIntegerUtils.isOdd(order);
@@ -43,8 +42,8 @@ public class ZrField extends AbstractField<ZrElement> {
     }
 
 
-    public ZrElement newElement() {
-        return new ZrElement(this);
+    public ZrElement<ZrField> newElement() {
+        return new ZrElement<ZrField>(this);
     }
 
     public BigInteger getOrder() {

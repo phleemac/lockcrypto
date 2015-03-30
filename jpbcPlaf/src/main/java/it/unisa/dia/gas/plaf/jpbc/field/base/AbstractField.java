@@ -5,18 +5,18 @@ import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
 import it.unisa.dia.gas.jpbc.Field;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public abstract class AbstractField<E extends Element> implements Field<E> {
 
     protected boolean orderIsOdd = false;
-    protected Random random;
+    protected SecureRandom random;
 
 
-    protected AbstractField(Random random) {
+    protected AbstractField(SecureRandom random) {
         this.random = random;
     }
 
@@ -31,6 +31,34 @@ public abstract class AbstractField<E extends Element> implements Field<E> {
     public E newElement(BigInteger value) {
         E e = newElement();
         e.set(value);
+
+        return e;
+    }
+
+    public E newElement(E e) {
+        E newElement = newElement();
+        newElement.set(e);
+
+        return newElement;
+    }
+
+    public E newElementFromHash(byte[] source, int offset, int length) {
+        E e = newElement();
+        e.setFromHash(source, offset, length);
+
+        return e;
+    }
+
+    public E newElementFromBytes(byte[] source) {
+        E e = newElement();
+        e.setFromBytes(source);
+
+        return e;
+    }
+
+    public E newElementFromBytes(byte[] source, int offset) {
+        E e = newElement();
+        e.setFromBytes(source, offset);
 
         return e;
     }
@@ -60,6 +88,14 @@ public abstract class AbstractField<E extends Element> implements Field<E> {
         return orderIsOdd;
     }
 
+    public int getLengthInBytes(Element e) {
+        return getLengthInBytes();
+    }
+
+    public int getCanonicalRepresentationLengthInBytes() {
+        return getLengthInBytes();
+    }
+
     public Element[] twice(Element[] elements) {
         for (Element element : elements) {
             element.twice();
@@ -76,15 +112,15 @@ public abstract class AbstractField<E extends Element> implements Field<E> {
         return a;
     }
 
-    public ElementPowPreProcessing pow(byte[] source) {
+    public ElementPowPreProcessing getElementPowPreProcessingFromBytes(byte[] source) {
         return new AbstractElementPowPreProcessing(this, AbstractElementPowPreProcessing.DEFAULT_K, source, 0);
     }
 
-    public ElementPowPreProcessing pow(byte[] source, int offset) {
+    public ElementPowPreProcessing getElementPowPreProcessingFromBytes(byte[] source, int offset) {
         return new AbstractElementPowPreProcessing(this, AbstractElementPowPreProcessing.DEFAULT_K, source, offset);
     }
 
-    public Random getRandom() {
+    public SecureRandom getRandom() {
         return random;
     }
 }

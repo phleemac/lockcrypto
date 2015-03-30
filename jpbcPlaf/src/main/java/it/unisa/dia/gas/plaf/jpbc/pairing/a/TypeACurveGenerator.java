@@ -1,27 +1,27 @@
 package it.unisa.dia.gas.plaf.jpbc.pairing.a;
 
-import it.unisa.dia.gas.jpbc.CurveGenerator;
-import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Field;
+import it.unisa.dia.gas.jpbc.PairingParameters;
+import it.unisa.dia.gas.jpbc.PairingParametersGenerator;
 import it.unisa.dia.gas.plaf.jpbc.field.curve.CurveField;
 import it.unisa.dia.gas.plaf.jpbc.field.z.ZrField;
-import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.parameters.PropertiesParameters;
+import it.unisa.dia.gas.plaf.jpbc.util.io.Base64;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class TypeACurveGenerator implements CurveGenerator {
-    protected Random random;
+public class TypeACurveGenerator implements PairingParametersGenerator {
+    protected SecureRandom random;
     protected int rbits, qbits;
     protected boolean generateCurveFieldGen;
 
 
-    public TypeACurveGenerator(Random random, int rbits, int qbits, boolean generateCurveFieldGen) {
+    public TypeACurveGenerator(SecureRandom random, int rbits, int qbits, boolean generateCurveFieldGen) {
         this.random = random;
         this.rbits = rbits;
         this.qbits = qbits;
@@ -37,7 +37,7 @@ public class TypeACurveGenerator implements CurveGenerator {
     }
 
 
-    public CurveParameters generate() {
+    public PairingParameters generate() {
         boolean found = false;
 
         BigInteger q;
@@ -92,7 +92,7 @@ public class TypeACurveGenerator implements CurveGenerator {
                 // guarantee (hr)^2 is big enough to resist finite field attacks.
                 // If h is constrained to be a multiple of three as well, then cube roots are extremely easy to
                 // compute in Fq: for all x \in Fq we see x^(-(q-2)/3) is the cube root of x,
-                h = BigIntegerUtils.getRandom(q).multiply(BigIntegerUtils.TWELVE);
+                h = BigIntegerUtils.getRandom(q, random).multiply(BigIntegerUtils.TWELVE);
 
                 // Next it is checked that q = hr ?1 is prime, if it is the case we have finished.
                 // Also, we choose q = -1 mod 12 so F_q2 can be implemented as F_q[i] (where i = sqrt(-1)).
@@ -106,7 +106,7 @@ public class TypeACurveGenerator implements CurveGenerator {
             }
         } while (!found);
 
-        DefaultCurveParameters params = new DefaultCurveParameters();
+        PropertiesParameters params = new PropertiesParameters();
         params.put("type", "a");
         params.put("q", q.toString());
         params.put("r", r.toString());
@@ -119,8 +119,7 @@ public class TypeACurveGenerator implements CurveGenerator {
         if (generateCurveFieldGen) {
             Field Fq = new ZrField(random, q);
             CurveField curveField = new CurveField<Field>(random, Fq.newOneElement(), Fq.newZeroElement(), r, h);
-            params.put("genNoCofac", new BigInteger(curveField.getGenNoCofac().toBytes()).toString());
-            
+            params.put("genNoCofac", Base64.encodeBytes(curveField.getGenNoCofac().toBytes()));
         }
 
         return params;
@@ -136,11 +135,10 @@ public class TypeACurveGenerator implements CurveGenerator {
         Integer rBits = Integer.parseInt(args[0]);
         Integer qBits = Integer.parseInt(args[1]);
 
-        TypeACurveGenerator generator = new TypeACurveGenerator(rBits, qBits);
-        DefaultCurveParameters curveParams = (DefaultCurveParameters) generator.generate();
+        TypeACurveGenerator generator = new TypeACurveGenerator(rBits, qBits, true);
+        PairingParameters curveParams = generator.generate();
 
         System.out.println(curveParams.toString(" "));
-
     }
 
 }

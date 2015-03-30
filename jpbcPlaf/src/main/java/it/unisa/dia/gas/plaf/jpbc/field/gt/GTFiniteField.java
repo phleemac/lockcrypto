@@ -5,18 +5,18 @@ import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractFieldOver;
 import it.unisa.dia.gas.plaf.jpbc.pairing.map.PairingMap;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class GTFiniteField<F extends Field> extends AbstractFieldOver<F, GTFiniteElement> {
     protected PairingMap pairing;
     protected BigInteger order;
 
 
-    public GTFiniteField(Random random, BigInteger order, PairingMap pairing, Field targetField) {
-        super(random, (F) targetField);
+    public GTFiniteField(SecureRandom random, BigInteger order, PairingMap pairing, F targetField) {
+        super(random, targetField);
 
         this.order = order;
         this.pairing = pairing;
@@ -32,7 +32,7 @@ public class GTFiniteField<F extends Field> extends AbstractFieldOver<F, GTFinit
     }
 
     public GTFiniteElement getNqr() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public int getLengthInBytes() {

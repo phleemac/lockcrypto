@@ -2,13 +2,12 @@ package it.unisa.dia.gas.plaf.jpbc.util.math;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class BigIntegerUtils {
     public static final BigInteger TWO = BigInteger.valueOf(2);
@@ -90,7 +89,7 @@ public class BigIntegerUtils {
     }
     
 
-    public static BigInteger generateSolinasPrime(int bits, Random random) {
+    public static BigInteger generateSolinasPrime(int bits, SecureRandom random) {
         // r is picked to be a Solinas prime, that is,
         // r has the form 2a +- 2b +- 1 for some integers 0 < b < a.
         BigInteger r, q;
@@ -127,7 +126,6 @@ public class BigIntegerUtils {
         }
 
     }
-
 
     public static BigInteger factorial(int n) {
         return factorial(BigInteger.valueOf(n));
@@ -313,13 +311,21 @@ public class BigIntegerUtils {
         return getRandom(limit, new SecureRandom());
     }
 
-    public static BigInteger getRandom(BigInteger limit, SecureRandom secureRandom) {
+    public static BigInteger getRandom(BigInteger limit, SecureRandom random) {
         BigInteger result;
         do {
-            result = new BigInteger(limit.bitLength(), secureRandom);
-        } while (limit.compareTo(result) >= 0);
+            result = new BigInteger(limit.bitLength(), random);
+        } while (limit.compareTo(result) <= 0);
         return result;
     }
+
+    public static BigInteger getRandom(int nbBits, SecureRandom random) {
+        if (nbBits <= 1)
+            return random.nextBoolean() ? BigInteger.ZERO : BigInteger.ONE;
+        else
+            return new BigInteger(nbBits, random).subtract(BigInteger.ONE.shiftLeft(nbBits - 1));
+    }
+
 
     /**
      * Compute trace of Frobenius at q^n given trace at q.
@@ -381,6 +387,21 @@ public class BigIntegerUtils {
                 weight++;
         }
         return weight;
+    }
+
+    public static BigInteger modNear(BigInteger a, BigInteger b) {
+        BigInteger res = a.mod(b);
+
+        if (res.compareTo(b.shiftRight(1)) == 1)
+            res = res.subtract(b);
+
+        return res;
+    }
+
+    public static BigInteger mod(BigInteger a, BigInteger b) {
+        BigInteger res = a.mod(b);
+
+        return res;
     }
 
 

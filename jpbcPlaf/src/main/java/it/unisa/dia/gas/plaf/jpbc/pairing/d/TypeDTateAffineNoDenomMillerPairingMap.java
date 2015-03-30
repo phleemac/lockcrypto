@@ -13,7 +13,7 @@ import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 import java.util.List;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class TypeDTateAffineNoDenomMillerPairingMap extends AbstractMillerPairingMap<Polynomial> {
     protected TypeDPairing pairing;
@@ -37,6 +37,10 @@ public class TypeDTateAffineNoDenomMillerPairingMap extends AbstractMillerPairin
         Polynomial Qy = (Polynomial) in2.getY().duplicate().mul(pairing.nqrInverseSquare);
 
         return new GTFiniteElement(this, (GTFiniteField) pairing.getGT(), tatePow(pairing(in1, Qx, Qy)));
+    }
+
+    public boolean isProductPairingSupported() {
+        return true;
     }
 
     public Element pairing(Element[] in1, Element[] in2) {

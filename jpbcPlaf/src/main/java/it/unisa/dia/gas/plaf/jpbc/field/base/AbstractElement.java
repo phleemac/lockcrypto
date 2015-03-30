@@ -2,7 +2,6 @@ package it.unisa.dia.gas.plaf.jpbc.field.base;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.ElementPowPreProcessing;
-import it.unisa.dia.gas.jpbc.Field;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -10,19 +9,20 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public abstract class AbstractElement implements Element {
-    protected AbstractField field;
+public abstract class AbstractElement<F extends AbstractField> implements Element {
+
+    protected F field;
     protected boolean immutable = false;
 
 
-    public AbstractElement(Field field) {
-        this.field = (AbstractField) field;
+    public AbstractElement(F field) {
+        this.field = field;
     }
 
 
-    public Field getField() {
+    public F getField() {
         return field;
     }
 
@@ -31,7 +31,7 @@ public abstract class AbstractElement implements Element {
     }
 
     public Element getImmutable() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public int getLengthInBytes() {
@@ -43,7 +43,7 @@ public abstract class AbstractElement implements Element {
     }
 
     public int setFromBytes(byte[] source, int offset) {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public Element pow(BigInteger n) {
@@ -61,7 +61,7 @@ public abstract class AbstractElement implements Element {
         return pow(n.toBigInteger());
     }
 
-    public ElementPowPreProcessing pow() {
+    public ElementPowPreProcessing getElementPowPreProcessing() {
         return new AbstractElementPowPreProcessing(this, AbstractElementPowPreProcessing.DEFAULT_K);
     }
 
@@ -85,11 +85,15 @@ public abstract class AbstractElement implements Element {
     }
 
     public Element sqrt() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
     }
 
     public byte[] toBytes() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        throw new IllegalStateException("Not Implemented yet!");
+    }
+
+    public byte[] toCanonicalRepresentation() {
+        return toBytes();
     }
 
     public Element mulZn(Element z) {
@@ -102,6 +106,11 @@ public abstract class AbstractElement implements Element {
 
     public Element twice() {
         return add(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Element && isEqual((Element) obj);
     }
 
 

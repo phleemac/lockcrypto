@@ -7,7 +7,7 @@ import java.math.BigInteger;
  * interface. You can obtain an instance of an Element starting from an algebraic structure, such as a particular
  * finite field or elliptic curve group, represented by the <code>Field</code> interface.
  *
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  * @see Field
  * @since 1.0.0
  */
@@ -39,17 +39,22 @@ public interface Element extends ElementPow {
     boolean isImmutable();
 
     /**
-     * Returns the immutable version of this element.
-     * When an element is immutable it means that every call to a method which modifies the value
-     * of the element returns a new instance of the element and not the same one.
+     * Returns an immutable copy of this element if the
+     * element is not already immutable.
+     * <br/>
+     * For immutable elements the internal value cannot be modified after it is created,
+     * any method designed to modify the internal state of the element will return
+     * a new element whose internal value represents the computation executed.
      *
-     * @return the immutable version of this element.
+     * @return an immutable copy of this element if the
+     * element is not already immutable.
      * @see #isImmutable()
      */
     Element getImmutable();
 
     /**
-     * Returns a copy of this element.
+     * Returns a copy of this element. If this element
+     * is immutable then the copy is mutable.
      *
      * @return a copy of this element.
      * @since 1.0.0
@@ -137,6 +142,16 @@ public interface Element extends ElementPow {
      * @since 1.0.0
      */
     byte[] toBytes();
+
+    /**
+     * Returns the canonical representation of this element.
+     * In most of the cases the output of this method
+     * is the same as that of the #toBytes method.
+     *
+     * @return the canonical representation of this element.
+     * @since 2.0.0
+     */
+    byte[] toCanonicalRepresentation();
 
     /**
      * Sets this element to zero.
@@ -307,7 +322,7 @@ public interface Element extends ElementPow {
      * @return the pre-processing information used to execute the exponentation of this element.
      * @see it.unisa.dia.gas.jpbc.ElementPowPreProcessing
      */
-    ElementPowPreProcessing pow();
+    ElementPowPreProcessing getElementPowPreProcessing();
 
     /**
      * Sets this = sqrt(this).

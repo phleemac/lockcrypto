@@ -4,10 +4,9 @@ import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractField;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public class ZField extends AbstractField<ZElement> {
 
@@ -15,7 +14,7 @@ public class ZField extends AbstractField<ZElement> {
         this(new SecureRandom());
     }
 
-    public ZField(Random random) {
+    public ZField(SecureRandom random) {
         super(random);
     }
 

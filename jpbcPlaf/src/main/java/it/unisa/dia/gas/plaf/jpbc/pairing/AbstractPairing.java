@@ -4,22 +4,20 @@ import it.unisa.dia.gas.jpbc.*;
 import it.unisa.dia.gas.plaf.jpbc.pairing.map.PairingMap;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
 public abstract class AbstractPairing implements Pairing {
 
-    protected CurveParameters curveParameters;
-    protected Random random;
+    protected SecureRandom random;
 
     protected Field G1, G2, GT, Zr;
     protected PairingMap pairingMap;
 
 
-    protected AbstractPairing(Random random) {
-        this.random = random;
+    protected AbstractPairing(SecureRandom random) {
+        this.random = (random == null) ? new SecureRandom() : random;
     }
 
     protected AbstractPairing() {
@@ -43,6 +41,25 @@ public abstract class AbstractPairing implements Pairing {
         return Zr;
     }
 
+    public int getDegree() {
+        return 2;
+    }
+
+    public Field getFieldAt(int index) {
+        switch (index) {
+            case 0:
+                return Zr;
+            case 1:
+                return G1;
+            case 2:
+                return G2;
+            case 3:
+                return GT;
+            default:
+                throw new IllegalArgumentException("invalid index");
+        }
+    }
+
     public Field getGT() {
         return GT;
     }
@@ -59,18 +76,18 @@ public abstract class AbstractPairing implements Pairing {
         return pairingMap.pairing((Point) in1, (Point) in2);
     }
 
-    public PairingPreProcessing pairing(Element in1) {
+    public PairingPreProcessing getPairingPreProcessingFromElement(Element in1) {
         if (!G1.equals(in1.getField()))
             throw new IllegalArgumentException("pairing 1st input mismatch");
 
         return pairingMap.pairing((Point) in1);
     }
 
-    public PairingPreProcessing pairing(byte[] source) {
+    public PairingPreProcessing getPairingPreProcessingFromBytes(byte[] source) {
         return pairingMap.pairing(source, 0);
     }
 
-    public PairingPreProcessing pairing(byte[] source, int offset) {
+    public PairingPreProcessing getPairingPreProcessingFromBytes(byte[] source, int offset) {
         return pairingMap.pairing(source, offset);
     }
 
@@ -78,21 +95,26 @@ public abstract class AbstractPairing implements Pairing {
         return pairingMap.isAlmostCoddh(a, b, c, d);
     }
 
-    public PairingFieldIdentifier getPairingFieldIdentifier(Field field) {
-        if (field == G1)
-            return PairingFieldIdentifier.G1;
-        if (field == G2)
-            return PairingFieldIdentifier.G2;
-        if (field == GT)
-            return PairingFieldIdentifier.GT;
+    public int getFieldIndex(Field field) {
         if (field == Zr)
-            return PairingFieldIdentifier.Zr;
-        return PairingFieldIdentifier.Unknown;
+            return 0;
+        if (field == G1)
+            return 1;
+        if (field == G2)
+            return 2;
+        if (field == GT)
+            return 3;
+
+        return -1;
+    }
+
+    public boolean isProductPairingSupported() {
+        return pairingMap.isProductPairingSupported();
     }
 
     public Element pairing(Element[] in1, Element[] in2) {
         if (in1.length != in2.length)
-            throw new IllegalArgumentException("The number of elements from G1 is different from the number of elements from G2.");
+            throw new IllegalArgumentException("Array lengths mismatch.");
 
         for (int i = 0; i < in1.length; i++) {
             if (!G1.equals(in1[i].getField()))

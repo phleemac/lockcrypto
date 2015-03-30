@@ -1,34 +1,29 @@
 package it.unisa.dia.gas.plaf.jpbc.field.curve;
 
 import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.FieldOver;
 import it.unisa.dia.gas.plaf.jpbc.field.base.AbstractPointElement;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  */
-public class CurveElement<E extends Element> extends AbstractPointElement<E> {
+public class CurveElement<E extends Element, F extends CurveField> extends AbstractPointElement<E, F> {
+
     protected int infFlag;
-    protected CurveField curveField;
-
-//    public static int counter = 0;
 
 
-    public CurveElement(FieldOver field) {
+    public CurveElement(F field) {
         super(field);
-        this.curveField = (CurveField) field;
 
         this.x = (E) field.getTargetField().newElement();
         this.y = (E) field.getTargetField().newElement();
         this.infFlag = 1;
     }
 
-    public CurveElement(CurveElement curveElement) {
-        super(curveElement.field);
-        this.curveField = curveElement.getField();
+    public CurveElement(CurveElement<E, F> curveElement) {
+        super(curveElement.getField());
 
         this.x = (E) curveElement.x.duplicate();
         this.y = (E) curveElement.y.duplicate();
@@ -36,19 +31,24 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
     }
 
 
-    public CurveField getField() {
-        return (CurveField) field;
+    public E getX() {
+        return x;
+    }
+
+    public E getY() {
+        return y;
+    }
+
+    public F getField() {
+        return field;
     }
 
     public Element getImmutable() {
-        if (isImmutable())
-            return this;
-
-        return new ImmutableCurveElement<E>(this);
+        return new ImmutableCurveElement<E, F>(this);
     }
 
-    public CurveElement duplicate() {
-        return new CurveElement(this);
+    public CurveElement<E,F> duplicate() {
+        return new CurveElement<E,F>(this);
     }
 
     public CurveElement set(Element e) {
@@ -67,11 +67,21 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
     }
 
     public CurveElement set(int value) {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        if (value == 0 || value == 1)
+            setToZero();
+        else
+            throw new IllegalStateException("Value not supported.");
+
+        return this;
     }
 
     public CurveElement set(BigInteger value) {
-        throw new IllegalStateException("Not implemented yet!!!");
+        if (BigInteger.ZERO.equals(value) || BigInteger.ONE.equals(value))
+            setToZero();
+        else
+            throw new IllegalStateException("Value not supported.");
+
+        return this;
     }
 
     public boolean isZero() {
@@ -108,8 +118,7 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
     }
 
     public CurveElement setToRandom() {
-        BigInteger order = field.getTargetField().getOrder();
-        set(getField().getGenPow().pow(new BigInteger(order.bitLength(), field.getRandom()).mod(order)));
+        set(getField().getGenPow().pow(BigIntegerUtils.getRandom(field.getTargetField().getOrder(), field.getRandom())));
 
         return this;
     }
@@ -227,28 +236,33 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
     }
 
     public boolean isEqual(Element e) {
-        if (this == e)
+        if (e == this)
             return true;
+
+        if (!(e instanceof CurveElement))
+            return false;
 
         CurveElement element = (CurveElement) e;
 
-        if (curveField.quotientCmp != null) {
+        if (field.quotientCmp != null) {
             // If we're working with a quotient group we must account for different
             // representatives of the same coset.
-            return this.duplicate().div(element).pow(curveField.quotientCmp).isOne();
+            return this.duplicate().div(element).pow(field.quotientCmp).isOne();
         }
 
         return isEqual(element);
     }
 
     public CurveElement powZn(Element e) {
-//        counter++;
         pow(e.toBigInteger());
         return this;
     }
 
     public BigInteger toBigInteger() {
-        throw new IllegalStateException("Not Implemented yet!!!");
+        if (isOne())
+            return BigInteger.ZERO;
+        else
+            throw new IllegalStateException("Cannot convert to BigInteger.");
     }
 
     public byte[] toBytes() {
@@ -268,7 +282,7 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
 
         Element t = field.getTargetField().newElement();
         for (; ;) {
-            t.set(x).square().add(curveField.a).mul(x).add(curveField.b);
+            t.set(x).square().add(field.a).mul(x).add(field.b);
             if (t.isSqr())
                 break;
 
@@ -278,8 +292,8 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
         if (y.sign() < 0)
             y.negate();
 
-        if (curveField.cofac != null)
-            mul(curveField.cofac);
+        if (field.cofac != null)
+            mul(field.cofac);
 
         return this;
     }
@@ -293,12 +307,6 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
 
     public String toString() {
         return String.format("%s,%s,%d", x, y, infFlag);
-    }
-
-    public boolean equals(Object obj) {
-        if (obj instanceof CurveElement)
-            return isEqual((Element) obj);
-        return super.equals(obj);    
     }
 
     public int getLengthInBytesCompressed() {
@@ -386,7 +394,7 @@ public class CurveElement<E extends Element> extends AbstractPointElement<E> {
 
     protected void setPointFromX() {
         infFlag = 0;
-        y.set(x.duplicate().square().add(curveField.a).mul(x).add(curveField.b).sqrt());
+        y.set(x.duplicate().square().add(field.a).mul(x).add(field.b).sqrt());
     }
 
 

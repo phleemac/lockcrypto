@@ -6,24 +6,23 @@ import it.unisa.dia.gas.plaf.jpbc.field.poly.PolyElement;
 import it.unisa.dia.gas.plaf.jpbc.field.poly.PolyField;
 import it.unisa.dia.gas.plaf.jpbc.field.quadratic.QuadraticField;
 import it.unisa.dia.gas.plaf.jpbc.field.z.ZrField;
-import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.parameters.PropertiesParameters;
 import it.unisa.dia.gas.plaf.jpbc.util.math.BigIntegerUtils;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
 
 /**
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  * The curve is defined as E : y^2 = x^2 + b
  * for some b \in F_q.
  */
-public class TypeFCurveGenerator implements CurveGenerator {
-    protected Random random;
+public class TypeFCurveGenerator implements PairingParametersGenerator {
+    protected SecureRandom random;
     protected int rBits; // The number of bits in r, the order of the subgroup G1
 
 
-    public TypeFCurveGenerator(Random random, int rBits) {
+    public TypeFCurveGenerator(SecureRandom random, int rBits) {
         this.random = random;
         this.rBits = rBits;
     }
@@ -33,7 +32,7 @@ public class TypeFCurveGenerator implements CurveGenerator {
     }
 
 
-    public CurveParameters generate() {
+    public PairingParameters generate() {
         //36 is a 6-bit number
         int xbit = (rBits - 6) / 4;
 
@@ -122,7 +121,7 @@ public class TypeFCurveGenerator implements CurveGenerator {
         }
 
         // Store parameters
-        DefaultCurveParameters params = new DefaultCurveParameters();
+        PropertiesParameters params = new PropertiesParameters();
         params.put("type", "f");
         params.put("q", q.toString());
         params.put("r", r.toString());
@@ -170,8 +169,8 @@ public class TypeFCurveGenerator implements CurveGenerator {
 
         Integer rBits = Integer.parseInt(args[0]);
 
-        CurveGenerator generator = new TypeFCurveGenerator(rBits);
-        DefaultCurveParameters curveParams = (DefaultCurveParameters) generator.generate();
+        PairingParametersGenerator generator = new TypeFCurveGenerator(rBits);
+        PairingParameters curveParams = generator.generate();
 
         System.out.println(curveParams.toString(" "));
     }

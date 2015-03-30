@@ -7,15 +7,10 @@ package it.unisa.dia.gas.jpbc;
  * Sometimes G1 and G2 are the same group (i.e. the pairing is symmetric) so their elements can be mixed freely.
  * In this case the #isSymmetric() function returns true.
  *
- * @author Angelo De Caro (angelo.decaro@gmail.com)
+ * @author Angelo De Caro (jpbclib@gmail.com)
  * @since 1.0.0
  */
 public interface Pairing {
-
-    /**
-     * Field identifiers.
-     */
-    public static enum PairingFieldIdentifier {G1, G2, GT, Zr, Unknown}
 
     /**
      * Returns true if this pairing is symmetric, false otherwise.
@@ -24,6 +19,17 @@ public interface Pairing {
      * @since 1.0.0
      */
     boolean isSymmetric();
+
+    /**
+     * Returns the degree of the pairing.
+     * For bilinear maps, this value is 2.
+     * For multilinear maps, this value represents
+     * the degree of linearity supported.
+     *
+     * @return the degree of the pairing.
+     * @since 2.0.0
+     */
+    int getDegree();
 
     /**
      * Return the G1 group.
@@ -58,6 +64,28 @@ public interface Pairing {
     Field getZr();
 
     /**
+     * Returns the field at level <tt>index</tt>.
+     * For bilinear maps, Zr has index 0, G1 has index 1,
+     * G2 has index 2 and GT has index 3.
+     *
+     * @return Returns the field at level <tt>index</tt>
+     * @since 2.0.0
+     */
+    Field getFieldAt(int index);
+
+    /**
+     * Returns the index of the field if it belongs
+     * to this pairing, otherwise it returns -1.
+     *
+     * @param field the field whose index has to be determine.
+     * @return the index of the field if it belongs
+     * to this pairing, otherwise it returns Unknown.
+     * @see #getFieldAt(int)
+     * @since 2.0.0
+     */
+    int getFieldIndex(Field field);
+
+    /**
      * Applies the bilinear map. It returns e(in1, in2). g1 must be in the group G1, g2 must be in the group G2.
      *
      * @param in1 an element from G1.
@@ -67,6 +95,22 @@ public interface Pairing {
      */
     Element pairing(Element in1, Element in2);
 
+    /**
+     * Returns <tt>true</tt> if optimized
+     * product of pairing is supported,
+     * <tt>false</tt> otherwise.
+     *
+     * If optimized product of pairing is supported then
+     * invoking the #pairing(Element[], Element[]) method should
+     * guarantee better performance.
+     *
+     * @return <tt>true</tt> if optimized
+     * product of pairing is supported,
+     * <tt>false</tt> otherwise.
+     * @since 2.0.0
+     * @see #pairing(Element[], Element[])
+     */
+    boolean isProductPairingSupported();
 
     /**
      * Computes the product of pairings, that is
@@ -80,24 +124,24 @@ public interface Pairing {
     Element pairing(Element[] in1, Element[] in2);
 
     /**
+     * Returns the length in bytes needed to represent a PairingPreProcessing structure.
+     *
+     * @return the length in bytes needed to represent a PairingPreProcessing structure.
+     * @since 1.2.0
+     * @see #getPairingPreProcessingFromBytes(byte[])
+     * @see #getPairingPreProcessingFromElement(Element)
+     * @see PairingPreProcessing
+     */
+    int getPairingPreProcessingLengthInBytes();
+
+    /**
      * Get ready to perform a pairing whose first input is in1, returns the results of time-saving pre-computation.
      *
      * @param in1 the first input of a pairing execution, used to pre-compute the pairing.
      * @return the results of time-saving pre-computation.
      * @since 1.0.0
      */
-    PairingPreProcessing pairing(Element in1);
-
-    /**
-     * Returns the length in bytes needed to represent a PairingPreProcessing structure.
-     *
-     * @return the length in bytes needed to represent a PairingPreProcessing structure.
-     * @since 1.2.0
-     * @see #pairing(byte[])
-     * @see #pairing(Element)
-     * @see PairingPreProcessing
-     */
-    int getPairingPreProcessingLengthInBytes();
+    PairingPreProcessing getPairingPreProcessingFromElement(Element in1);
 
     /**
      * Reads a PairingPreProcessing from the buffer source.
@@ -106,7 +150,7 @@ public interface Pairing {
      * @return the PairingPreProcessing instance.
      * @since 1.2.0
      */
-    PairingPreProcessing pairing(byte[] source);
+    PairingPreProcessing getPairingPreProcessingFromBytes(byte[] source);
 
     /**
      * Reads a PairingPreProcessing from the buffer source starting from offset.
@@ -116,30 +160,6 @@ public interface Pairing {
      * @return the PairingPreProcessing instance.
      * @since 1.2.0
      */
-    PairingPreProcessing pairing(byte[] source, int offset);
+    PairingPreProcessing getPairingPreProcessingFromBytes(byte[] source, int offset);
 
-    /**
-     * Returns true given (g, g^x, h, h^x) or (g, g^x, h, h^-x)
-     * order is important: a, b are from G1, c, d are from G2
-     *
-     * @param a eventually g
-     * @param b eventually g^x
-     * @param c eventually h
-     * @param d eventually h^x or h^-x
-     * @return <tt>true</tt> given (g, g^x, h, h^x) or (g, g^x, h, h^-x), <tt>false</tt> otherwise.
-     * @since 1.0.0
-     */
-    boolean isAlmostCoddh(Element a, Element b, Element c, Element d);
-
-    /**
-     * Returns the identifier of the field if it belongs
-     * to this pairing, otherwise it returns Unknown.
-     *
-     * @param field the field whose identifier has to be determine.
-     * @return the identifier of the field if it belongs
-     * to this pairing, otherwise it returns Unknown.
-     * @since 1.2.0
-     * @see PairingFieldIdentifier
-     */
-    PairingFieldIdentifier getPairingFieldIdentifier(Field field);
 }

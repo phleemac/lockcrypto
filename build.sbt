@@ -5,7 +5,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val root = (project in file(".")).
-  aggregate(core, web)
+  aggregate(core, web, nicsCrypto)
 
 lazy val core = project.
   settings(commonSettings: _*).
@@ -27,3 +27,8 @@ lazy val web = project.
     )
   )
 
+lazy val nicsCrypto = project.
+  settings(commonSettings: _*).
+  settings(
+    name := """nics-crypto"""
+  )

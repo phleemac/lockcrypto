@@ -35,7 +35,7 @@ lazy val nicsCrypto = project.
   )
 
 lazy val jpbcSettings = Seq(
-  version := "1.2.0"
+  version := "2.0.0"
 )
 
 lazy val jpbcAPI = project.

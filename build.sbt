@@ -1,7 +1,18 @@
 lazy val projectPrefix = """lockcrypto-"""
+
 lazy val commonSettings = Seq(
   version := "0.01-SNAPSHOT",
   scalaVersion := "2.11.6"
+)
+
+lazy val specs2Version = "3.2"
+
+lazy val specs2Settings = Seq(
+  libraryDependencies ++= Seq(
+    "org.specs2" %% "specs2" % specs2Version % "test",
+    "org.specs2" %% "specs2-junit" % specs2Version % "test"
+  ),
+  resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 )
 
 lazy val root = (project in file(".")).
@@ -30,6 +41,7 @@ lazy val web = project.
 lazy val nicsCrypto = project.
   dependsOn(jpbcAPI, jpbcPlaf).
   settings(commonSettings: _*).
+  settings(specs2Settings: _*).
   settings(
     name := """nics-crypto"""
   )

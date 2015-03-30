@@ -12,7 +12,7 @@ class MainSpec extends Specification {
 
     "be happy" in {
       var cpuTime: Long = 0L
-      var time = new Array[Long](20)
+      val time = new Array[Long](20)
       var i: Int = 0
 
       def medirTiempoMicroSegundos: Long = {

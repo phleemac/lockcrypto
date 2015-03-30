@@ -3,6 +3,7 @@ lazy val projectPrefix = """lockcrypto-"""
 lazy val commonSettings = Seq(
   version := "0.01-SNAPSHOT",
   scalaVersion := "2.11.6"
+  //  javacOptions ++= Seq("-Xlint:unchecked")
 )
 
 lazy val specs2Version = "3.2"

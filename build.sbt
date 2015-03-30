@@ -5,7 +5,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val root = (project in file(".")).
-  aggregate(core, web, nicsCrypto)
+  aggregate(core, web, nicsCrypto, jpbcAPI, jpbcPlaf)
 
 lazy val core = project.
   settings(commonSettings: _*).
@@ -28,7 +28,27 @@ lazy val web = project.
   )
 
 lazy val nicsCrypto = project.
+  dependsOn(jpbcAPI, jpbcPlaf).
   settings(commonSettings: _*).
   settings(
     name := """nics-crypto"""
+  )
+
+lazy val jpbcSettings = Seq(
+  version := "1.2.0"
+)
+
+lazy val jpbcAPI = project.
+  settings(commonSettings: _*).
+  settings(jpbcSettings: _*).
+  settings(
+    name := """jpbc-api"""
+  )
+
+lazy val jpbcPlaf = project.
+  dependsOn(jpbcAPI).
+  settings(commonSettings: _*).
+  settings(jpbcSettings: _*).
+  settings(
+    name := """jpbc-plaf"""
   )
